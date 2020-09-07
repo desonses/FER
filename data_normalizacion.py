@@ -55,8 +55,14 @@ def z_score_norm(image):
 	
 if __name__ == '__main__':
 	# folder with all images
-	dir_image = 'C:/Users/virus/source/repos/FER/CK+/ckplus/'
+	############dir_image = 'C:/Users/virus/source/repos/FER/CK+/ckplus/'
 	# histogram equalization
-	histogram_equ(dir_image)
+	###########histogram_equ(dir_image)
+
+
+	# test
+	#img = cv2.imread('C:/Users/virus/source/repos/DATASETS/PRUEBA/zscore.png', 0)
+	#equ = cv2.equalizeHist(img)
+	#cv2.imwrite('C:/Users/virus/source/repos/DATASETS/PRUEBA/final.png', equ)
 
 

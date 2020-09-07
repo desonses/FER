@@ -83,7 +83,7 @@ def face_alingment(path, size):
 
 	for root, dirs, files in os.walk(path, topdown=False):
 		folder = get_folder(root, path)
-		if folder is not None:# and folder == "anger":
+		if folder is not None:#
 			new_folder = os.path.join(new_path, folder)
 			if not os.path.isdir(new_path):
 				os.mkdir(new_path)
@@ -102,9 +102,9 @@ def face_alingment(path, size):
 
 if __name__ == '__main__':
 	
-	set_path = 'C:/Users/virus/source/repos/FER/prueba/'
+	set_path = 'C:/Users/virus/source/repos/DATASETS/PRUEBA/rotate4.png'
 	#'C:/Users/virus/source/repos/FER/datasets/CK+48/'
 	size = 48 # size of output image, 48x48
 
-	face_alingment(set_path, size)
-	#face_alingment(face_file_path, new_path)
+	####face_alingment(set_path, size)
+	alingment(set_path, 'C:/Users/virus/source/repos/DATASETS/PRUEBA/rotate1_1.png', 48)
