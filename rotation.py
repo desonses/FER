@@ -56,12 +56,16 @@ def rotation_by(image, angle, new_folder):
 	rotated = colorImage.rotate(angle)
 
 	rotated.convert('L').save(new_folder)
-
 	# Display the Image rotated
-	########rotated.show()
+	# ########rotated.show()
 
 
-def display_image(image, points):
+def crop_image(points):
+
+	im = im.crop((165, 168, 363, 378))
+
+
+def display_image(image, points, box):
 	
 	# convert(), for draw color points in a image in grayscale
 	im = Image.open(image).convert('RGB')
@@ -69,34 +73,34 @@ def display_image(image, points):
 	draw = ImageDraw.Draw(im)
 	
 	draw.point(points, fill='red')
-	######draw.line(points[-2:], fill ='blue', width = 0) 
 
+	###### draw box
+	a = box[0]
+	b = box[1]
+	c = box[2]
+	d = box[3]
+
+	draw.line((a, b), fill ='blue', width = 0)
+	draw.line((b, c), fill ='blue', width = 0)
+	draw.line((c, d), fill ='blue', width = 0)
+	draw.line((d, a), fill ='blue', width = 0)
+	
+	
 	# display
 	im.show()
 
-def compute_dist(point):
-	
-	def distance(point1, point2):
 
-		dist = np.square(np.power((point2[0] - point1[0]), 2)
-				+ np.power((point2[1] - point1[1]), 2))
 
-		return dist
+def get_box(points):
 
-	d = 0
-	x2 = point[0]
-	y2 = point[1]
+	a = points[0]
+	b = points[1]
+	c = points[2]
+	d = points[3]
 
-	while d != 60:
-		
-		point2 = (x2, y2)
-		d = distance(point, point2)
-		print("point = {}, distance = {}".format(point2, d))
-		y2 += 1
-		print("y = ", y2)
+	square = ((a[0], b[1]), (c[0], b[1]), (c[0], d[1]), (a[0], d[1]))
 
-	return point2
-
+	return square
 
 
 def compute_landmarcks(image):
@@ -127,13 +131,6 @@ def compute_landmarcks(image):
 			y = int(landmarcks.part(i).y)
 			points.append((x, y))
 	
-	#delimited = points[36:48]
-	#delimited.append(points[0])  # 1
-	#delimited.append(points[8])  # 9
-	#delimited.append(points[16]) # 15, 16
-
-	
-	
 
 	eyes = points[36:48]
 
@@ -143,17 +140,15 @@ def compute_landmarcks(image):
 	centroid = computeCentroid(np.asarray(eyes))
 
 	d = compute_distance(eyes) # compute 2nd point to the distance of 0.6
-	print("distance: {}".format(d))
 
-
-
-	print("centroid = {}".format(centroid))       # (258, 228)
 	eyes.append(centroid)
+	new_point = (centroid[0], centroid[1] - 60)
+	eyes.append(new_point)
+
 
 	eyes.append(points[0])  # 1
 	eyes.append(points[8])  # 9
 	eyes.append(points[16]) # 17
-
 
 	centroid_left = computeCentroid(left)   # (x, y)
 	centroid_right = computeCentroid(right) # (x, y)
@@ -162,10 +157,17 @@ def compute_landmarcks(image):
 	eyes.append(centroid_right)
 
 	m = (centroid_right[1] - centroid_left[1]) / (centroid_right[0] - centroid_left[0])
-	print("pendiente: {}".format(m))
+	#print("pendiente: {}".format(m))
+
+	#########################
+	
+	
+	rectangle = (points[0], points[8], points[16], new_point)
+	box = get_box(rectangle)
+
 
 	# display image with eyes points
-	display_image(image, eyes)
+	display_image(image, eyes, box)
 
 	#rotation
 	##########rotation_by(image, angle)
@@ -221,7 +223,7 @@ def compute_rotations(path):
 
 if __name__ == '__main__':
 
-	image = 'C:/Users/virus/source/repos/DATASETS/PRUEBA/rotate11.png'
+	image = 'C:/Users/virus/source/repos/DATASETS/PRUEBA/landmarck/Rotations/rotate2.png'
 	compute_landmarcks(image)
 
 
