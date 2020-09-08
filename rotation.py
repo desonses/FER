@@ -69,9 +69,34 @@ def display_image(image, points):
 	draw = ImageDraw.Draw(im)
 	
 	draw.point(points, fill='red')
-	
+	######draw.line(points[-2:], fill ='blue', width = 0) 
+
 	# display
 	im.show()
+
+def compute_dist(point):
+	
+	def distance(point1, point2):
+
+		dist = np.square(np.power((point2[0] - point1[0]), 2)
+				+ np.power((point2[1] - point1[1]), 2))
+
+		return dist
+
+	d = 0
+	x2 = point[0]
+	y2 = point[1]
+
+	while d != 60:
+		
+		point2 = (x2, y2)
+		d = distance(point, point2)
+		print("point = {}, distance = {}".format(point2, d))
+		y2 += 1
+		print("y = ", y2)
+
+	return point2
+
 
 
 def compute_landmarcks(image):
@@ -101,36 +126,43 @@ def compute_landmarcks(image):
 			x = int(landmarcks.part(i).x)
 			y = int(landmarcks.part(i).y)
 			points.append((x, y))
-
-			# points 36 to 47
-			#if i >= 36 and i <= 47:
-			#	x = int(landmarcks.part(i).x)
-			#	y = int(landmarcks.part(i).y)
-			#	eyes.append((x, y))
-	delimited = points[36:48]
-	delimited.append(points[0])  # 1
-	delimited.append(points[8])  # 9
-	delimited.append(points[16]) # 15, 16
+	
+	#delimited = points[36:48]
+	#delimited.append(points[0])  # 1
+	#delimited.append(points[8])  # 9
+	#delimited.append(points[16]) # 15, 16
 
 	
 	
 
 	eyes = points[36:48]
-	
-	left = np.asarray(points[0:6]) # points(x,y), 36 to 41	
-	right = points[6:] # points(x,y), 42 to 47
-	
-	print(left,"\n\n")
-	x = [coord[0] for coord in left]
-	y = [coord[1] for coord in left]
 
-	centroid = (int(sum(x)/len(left)), int(sum(y)/len(left)))
+	left = np.asarray(eyes[0:6]) # points(x,y), 36 to 41	
+	right = np.asarray(eyes[6:]) # points(x,y), 42 to 47
+	
+	centroid = computeCentroid(np.asarray(eyes))
 
-	print("===> ",centroid)
+	d = compute_distance(eyes) # compute 2nd point to the distance of 0.6
+	print("distance: {}".format(d))
+
+
+
+	print("centroid = {}".format(centroid))       # (258, 228)
 	eyes.append(centroid)
-	#######angle = compute_angle(eyes)
-	########distance = compute_distance(eyes)
-	########print("angle: {}".format(angle))
+
+	eyes.append(points[0])  # 1
+	eyes.append(points[8])  # 9
+	eyes.append(points[16]) # 17
+
+
+	centroid_left = computeCentroid(left)   # (x, y)
+	centroid_right = computeCentroid(right) # (x, y)
+
+	eyes.append(centroid_left)
+	eyes.append(centroid_right)
+
+	m = (centroid_right[1] - centroid_left[1]) / (centroid_right[0] - centroid_left[0])
+	print("pendiente: {}".format(m))
 
 	# display image with eyes points
 	display_image(image, eyes)
@@ -138,6 +170,16 @@ def compute_landmarcks(image):
 	#rotation
 	##########rotation_by(image, angle)
 	##########return angle, distance
+	
+def computeCentroid(points):
+
+	xs = int(np.sum([p[0] for p in points]) / len(points))
+	ys = int(np.sum([p[1] for p in points]) / len(points))
+
+	centroid = (xs, ys)
+	#print("==>", centroid)
+
+	return centroid
 
 
 def compute_rotations(path):
@@ -179,7 +221,7 @@ def compute_rotations(path):
 
 if __name__ == '__main__':
 
-	image = 'C:/Users/virus/source/repos/DATASETS/PRUEBA/landmarck/rotate1.png'
+	image = 'C:/Users/virus/source/repos/DATASETS/PRUEBA/rotate11.png'
 	compute_landmarcks(image)
 
 
