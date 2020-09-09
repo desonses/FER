@@ -30,10 +30,11 @@ def compute_angle(points):
 	
 	return angle
 
-def compute_distance(points):
+
+def distance_between(eyes):
 	
 	# as array, much more fast
-	points = np.asarray(points)
+	points = np.asarray(eyes)
 	
 	# select eye right and left
 	left = points[0:6] # points(x,y), 36 to 41	
@@ -54,34 +55,48 @@ def rotation_by(image, angle, new_folder):
 	
 	# Rotate it by n-degrees
 	rotated = colorImage.rotate(angle)
-
-
+	
 	#return rotated
 	rotated.convert('L').save(new_folder)
 	# Display the Image rotated
 	# ########rotated.show()
 
 
-def crop_image(points):
+def crop_image(image, rectangle, new_folder, show = False):
 
-	im = im.crop((165, 168, 363, 378))
+	left = rectangle[0]
+	top = rectangle[1]
+	right = rectangle[2]
+	bottom = rectangle[3]
 
 
-def display_image(image, points, box, centroids = None, new_folder = None):
+	im = Image.open(image)
+
+	im = im.crop((left[0], bottom[1], right[0], top[1]))
+	if show:
+		im.show()
+
+	im.convert('L').save(new_folder)
+
+
+
+def display_image(image, points, box, centroids = None, new_folder = None, show = False):
 	
 	# convert(), for draw color points in a image in grayscale
 	im = Image.open(image).convert('RGB')
 	
 	draw = ImageDraw.Draw(im)
 	
+	# draw 12 points of eyes
 	draw.point(points, fill='red')
 
-	###### draw box
+	# draw box
 	a = box[0]
 	b = box[1]
 	c = box[2]
 	d = box[3]
 
+	# line vertical
 	A = points[-2]
 	B = points[-1]
 
@@ -96,9 +111,11 @@ def display_image(image, points, box, centroids = None, new_folder = None):
 		left = centroids[0]
 		right = centroids[1]
 
+		# line horizontal
 		draw.line((left, right), fill ='green', width = 0)
 
-		im.show()
+		if show:
+			im.show()
 
 	if new_folder is not None:
 		im.convert('RGB').save(new_folder)
@@ -141,52 +158,9 @@ def compute_landmarcks(image):
 			x = int(landmarcks.part(i).x)
 			y = int(landmarcks.part(i).y)
 			points.append((x, y))
-	
-
-	#################eyes = points[36:48]
-
-	################angle = compute_angle(eyes)
-	################distance = compute_distance(eyes) # compute 2nd point to the distance of 0.6
-
-	#################left = np.asarray(eyes[0:6]) # points(x,y), 36 to 41	
-	#################right = np.asarray(eyes[6:]) # points(x,y), 42 to 47
-	
-	#centroid = computeCentroid(np.asarray(eyes))
-
-	
-
-	################eyes.append(centroid)
-	################new_point = (centroid[0], centroid[1] - 60)
-	################eyes.append(new_point)
-
-
-	################eyes.append(points[0])  # 1
-	################eyes.append(points[8])  # 9
-	################eyes.append(points[16]) # 17
-
-	################centroid_left = computeCentroid(left)   # (x, y)
-	################centroid_right = computeCentroid(right) # (x, y)
-
-	################eyes.append(centroid_left)
-	################eyes.append(centroid_right)
-
-	################m = (centroid_right[1] - centroid_left[1]) / (centroid_right[0] - centroid_left[0])
-	#############print("slope: {}\n".format(m))
-
-	#########################
-	
-	
-	################rectangle = (points[0], points[8], points[16], new_point)
-	################box = get_box(rectangle)
-
-
-	# display image with eyes points
-	###########display_image(image, eyes, box)
-
-	#rotation
-	##########rotation_by(image, angle)
 
 	return points
+
 
 def centroid_of(eyes):
 
@@ -199,6 +173,7 @@ def centroid_of(eyes):
 	centroids = (centroid_left, centroid_right)
 
 	return centroids
+
 
 def compute_slope(centroids):
 
@@ -268,27 +243,6 @@ def compute_rotations(path):
 
 	print("finish...")
 
-	
-			# get the facial landmarcks and compute the angle
-			#print("image ====> {}".format(image))
-			################distance = compute_landmarcks(image)["distance"] 
-			################box = compute_landmarcks(image)["box"] 
-			################eyes = compute_landmarcks(image)["eyes"] 
-			################landmarcks = compute_landmarcks(image)["landmarcks"] 
-
-			#print("angle = {}\ndistance = {}\nbox = {}\neyes = {}\nlandmarcks = {}\n\n".format(angle,
-			#																	  distance,
-			#																	  box,
-			#																	  eyes,
-			#																	  landmarcks[0:5]))
-
-			################display_image(image, eyes, box)
-			# make rotation and save it in the new directory
-			
-
-			#print("original:   {}".format(original))
-			#print("new_folder: {}".format(new_folder))
-			########print("\n")
 	return new_path
 
 
@@ -298,7 +252,7 @@ def facial_and_box_landarmarcks(path):
 		raise Exception("Invalid directory")
 
 	# New Directory  
-	directory = "LandMarcks/"
+	directory = "CropedImages/"
 	new_path = os.path.join(path, directory)
 
 	# create new folder
@@ -318,15 +272,19 @@ def facial_and_box_landarmarcks(path):
 			# compute the angle between eyes
 			angle = compute_angle(eyes) 
 
+			# compute distance between eyes
+			d = distance_between(eyes)
+
 			# get the centroids of eyes, centroids = pupile
 			centroids = centroid_of(eyes)
 
 			# compute the slope between centrois, 
 			slope = compute_slope(centroids)
-			print("{}, '{}', angle = {}, m = {}\n".format(len(files) - i,
+			print("{}, '{}', angle = {}, m = {}\ndistance between eyes = {}\n".format(len(files) - i,
 												 file,
 												 angle,
-												 slope))
+												 slope,
+												 d))
 			
 			# centroid between eyes
 			centroid = computeCentroid(np.asarray(eyes))
@@ -344,9 +302,12 @@ def facial_and_box_landarmarcks(path):
 			# box that define the face
 			box = get_box(rectangle)
 
+			# display and save it 
+			display_image(image, eyes, box, centroids, new_folder, show = True)
 
-			display_image(image, eyes, box, centroids, new_folder)
 
+			# Setting the points for cropped image
+			crop_image(image, rectangle, new_folder, show = False)
 
 
 
@@ -359,15 +320,16 @@ if __name__ == '__main__':
 
 	# rotate images
 	path = 'C:/Users/virus/source/repos/DATASETS/PRUEBA/landmarck/'
+	print("Rotating...\n")
 	new_images_rotated = compute_rotations(path)
-
+	print("\n\n")
 	#################################################################
 	#################################################################
 
 	# compute the box area for crop image
 	#path = 'C:/Users/virus/source/repos/DATASETS/PRUEBA/landmarck/Rotations/'
-	print("new directory = {}".format(new_images_rotated))
-
+	#print("new directory = {}".format(new_images_rotated))
+	print("Croping...\n")
 	facial_and_box_landarmarcks(new_images_rotated)
 
 
