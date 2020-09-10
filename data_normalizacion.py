@@ -2,19 +2,33 @@ import os
 import cv2
 import numpy as np
 from PIL import Image
-from numpy import asarray
 from scipy import stats
+from numpy import asarray
+from PIL import Image, ImageDraw
+
+
+def downsampling_apply(image, new_folder, size = 32):
+	
+	 # or whatever you are doing to the image
+	
+	try:
+		#Processes the image
+		proc_image = Image.open(image)
+		proc_image = proc_image.resize((size, size), Image.ANTIALIAS)
+		proc_image.save(new_folder)
+
+	except Exception:
+		print("An error has ocurred while trying to save a resized image...")
+
 
 # histogram equalization and z-score normalizacion
-
-
 def histogram_equ(path):
 
 
 	if not os.path.isdir(path):
 		raise Exception("Invalid directory")
 	
-	directory = "Histogram/"
+	directory = "HistogramApplied/"
 	new_path = os.path.join(path, directory)
 
 	for root, dirs, files in os.walk(path, topdown=False):
@@ -29,40 +43,149 @@ def histogram_equ(path):
 			img = cv2.imread(original, 0)
 			equ = cv2.equalizeHist(img)
 
-			
-			#res = np.hstack((img,equ)) #stacking images side-by-side
+			if i %100 == 0:
+				print("{}, name = {}".format(len(files) - i, name))
 
 			#save new image histogram equ
 			cv2.imwrite(output_path, equ)
-			print("{}".format(len(files) - i))
 
+	return new_path
 
-
-def z_score_norm(image):
-	# load image
+# compute mean and standard deviation
+def mean_std_by(image):
+	
 	image = Image.open(image)
 	pixels = asarray(image)
-	# confirm pixel range is 0-255
 	
-	print('dim image: {}'.format(pixels.shape))
-	print('Min: %.3f, Max: %.3f' % (pixels.min(), pixels.max()))
-	# convert from integers to floats
-	#pixels = pixels.astype('float32')
-	image = stats.zscore(pixels, axis=1, ddof=1)
-	image = Image.fromarray(image)
+	mean = np.mean(pixels.flatten(), dtype=np.float64)
+	std = np.std(pixels.flatten(), dtype=np.float64)
 
-	image.show()
+	return mean, std
+
+
+def compute_mean_std_general(path):
 	
-if __name__ == '__main__':
+	if not os.path.isdir(path):
+		raise Exception("Invalid directory...")
+	
+	means = []
+	stds = []
+	
+	for root, dirs, files in os.walk(path, topdown=False):
+		for i, name in enumerate(files, 1):
+
+			original = os.path.join(root, name)
+			mean, std = mean_std_by(original)
+
+			means.append(mean)
+			stds.append(std)
+
+			if i % 100 == 0:
+				print("'{}' computing std, mean...left {}".format(name,
+													  len(files) - i))
+				
+	mean_gral = np.mean(np.asarray(means))
+	std_gral = np.std(np.asarray(stds))
+	
+	return mean_gral, std_gral
+
+
+def zscore(origin, new_folder, mean, std):
+    
+    image = Image.open(origin)
+    pixels = asarray(image)
+
+    pixels = (pixels - mean) /  std
+    
+    im = Image.fromarray(np.float64(pixels))
+
+	#save it
+    im.convert('L').save(new_folder)
+
+
+def zscore_normalization(path, mean, std):
+	
+	if not os.path.isdir(path):
+		raise Exception("Invalid directory")
+	
+	
+	# New Directory
+	directory = "ZscoreApplied/"
+	new_path = os.path.join(path, directory)
+	
+	if not os.path.isdir(new_path):
+		os.mkdir(new_path)
+		
+	# compute mean and std for all images
+	# 
+	#############mean, std = read_images(path)
+	print("")
+	print("mean gral: {}\nstd gral: {}".format(mean, std))
+	print("")
+	
+	for root, dirs, files in os.walk(path, topdown=False):
+		for i, file in enumerate(files):
+			
+			original = os.path.join(root, file)
+			new_folder = os.path.join(new_path, file)
+			
+			zscore(original, new_folder, mean, std)
+
+			if i%100 == 0:
+				print("'{}' comuting z-score... left {}".format(file,
+													len(files) - i))
+
+	return new_path
+	
+
+def downsampling_images(path, final):
+	
+	if not os.path.isdir(path):
+		raise Exception("Invalid directory: {}".format(path))
+	
+	if not os.path.isdir(final):
+		raise Exception("Invalid directory {}".format(final))
+	
+	# New Directory
+	directory = "DownsamplingApplied/"
+	new_path = os.path.join(final, directory)
+	
+	if not os.path.isdir(new_path):
+		os.mkdir(new_path)
+
+	for root, dirs, files in os.walk(path, topdown=False):
+		for i, file in enumerate(files, 1):
+			
+			image_original = os.path.join(root, file)
+
+			new_folder = os.path.join(new_path, file)
+
+			if i%100 == 0:
+				print("'{}' Appliying downsamplig...left {}".format(file,
+														len(files) - i))
+
+			downsampling_apply(image_original, new_folder, size = 32)
+			
+	return 1
+
+
+#if __name__ == '__main__':
 	# folder with all images
-	############dir_image = 'C:/Users/virus/source/repos/FER/CK+/ckplus/'
+#	dir_image = 'C:/Users/virus/source/repos/DATASETS/CK+/'
+
 	# histogram equalization
-	###########histogram_equ(dir_image)
+#	histogram_equ('C:/Users/virus/source/repos/DATASETS/Histogram/ZscoreOutput/')
 
 
-	# test
-	#img = cv2.imread('C:/Users/virus/source/repos/DATASETS/PRUEBA/zscore.png', 0)
-	#equ = cv2.equalizeHist(img)
-	#cv2.imwrite('C:/Users/virus/source/repos/DATASETS/PRUEBA/final.png', equ)
+	# 
+#	histogram_images = 'C:/Users/virus/source/repos/DATASETS/Histogram/'
+	#mean_gral, std_gral = compute_mean_std_general(dir_image)
+	#print("\ngeneral mean = {}\ngeneral std = {}".format(mean_gral, std_gral))
 
+	#general mean = 126.28778215950788 histogram
+	#general std = 2.6452071285228773  histogram
 
+	#mean gral: 113.84889976249121  original
+	#std gral: 8.53443628163184     original
+
+	#zscore_normalization(histogram_images, mean_gral, std_gral)
