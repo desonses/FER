@@ -13,7 +13,7 @@ def downsampling_apply(image, new_folder, size = 32):
 	
 	try:
 		#Processes the image
-		proc_image = Image.open(image)
+		proc_image = Image.open(image).convert("L")
 		proc_image = proc_image.resize((size, size), Image.ANTIALIAS)
 		proc_image.save(new_folder)
 
@@ -50,6 +50,7 @@ def histogram_equ(path):
 			cv2.imwrite(output_path, equ)
 
 	return new_path
+
 
 # compute mean and standard deviation
 def mean_std_by(image):
@@ -91,16 +92,17 @@ def compute_mean_std_general(path):
 
 
 def zscore(origin, new_folder, mean, std):
-    
-    image = Image.open(origin)
-    pixels = asarray(image)
-
-    pixels = (pixels - mean) /  std
-    
-    im = Image.fromarray(np.float64(pixels))
-
-	#save it
-    im.convert('L').save(new_folder)
+	
+	try:
+		image = Image.open(origin)
+		pixels = asarray(image)
+		pixels = (pixels - mean) /  std
+		im = Image.fromarray(np.float64(pixels))
+		#save it
+		im.convert('L').save(new_folder)
+		
+	except Exception:
+		print("An error has ocurred while trying to save a zscore image...")
 
 
 def zscore_normalization(path, mean, std):

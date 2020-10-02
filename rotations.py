@@ -223,9 +223,9 @@ def compute_rotations(path):
 			image = os.path.join(root, file)
 			new_folder = os.path.join(new_path, file)
 
-
-			if i%30 == 0:
-				break
+			# for n samples
+			##########if i%30 == 0:
+				#########break
 
 			# rotation 
 			landmarcks = compute_landmarcks(image)
@@ -240,10 +240,11 @@ def compute_rotations(path):
 			# compute the slope between centrois, 
 			slope = compute_slope(centroids)
 
-			print("{}, '{}', angle = {}, m = {}\n".format(len(files) - i,
-												file,
-												angle,
-												slope))
+			if i%100 == 0:
+				print("{}, '{}', angle = {}, m = {}\n".format(len(files) - i,
+												  file,
+												  angle,
+												  slope))
 				
 
 			# display images
