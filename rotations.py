@@ -147,8 +147,9 @@ def get_box(points):
 
 def compute_landmarcks(image):
 	
-	predictor_path = 'C:/Users/virus/Downloads/prueba/shape_predictor_68_face_landmarks.dat'
-
+	#predictor_path = 'your_path/shape_predictor_68_face_landmarks.dat'
+	#download -> https://github.com/davisking/dlib-models
+	
 	detector = dlib.get_frontal_face_detector()
 	predictor = dlib.shape_predictor(predictor_path)
 
