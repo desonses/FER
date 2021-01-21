@@ -312,7 +312,7 @@ def facial_and_box_landmarcks(path):
 			eyes.append(centroid)
 
 			# new point on top
-			new_point = (centroid[0], centroid[1] - 90)
+			new_point = (centroid[0], centroid[1] - 60)
 			eyes.append(new_point)
 
 			rectangle = (landmarcks[0],
