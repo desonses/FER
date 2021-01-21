@@ -152,7 +152,7 @@ def downsampling_images(path, folder, sett):
 	
 	# New Directory
 	# 
-	data = "C:/Users/virus/Downloads/CK+/dataset-6emotions/dataset/"
+	data = "your_path/CK+/dataset-6emotions/dataset/"
 	
 
 	# folder dataset
