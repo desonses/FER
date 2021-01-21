@@ -14,7 +14,7 @@ Includes a pre-processing step to training images:
 
 5. Downsampling to 32x32
 
-6. Data augmentacion (online, random rotation (-2°,2°) and horizontal flipping)
+6. Data augmentation (online, random rotation (-2°,2°) and horizontal flipping)
 
 
 
