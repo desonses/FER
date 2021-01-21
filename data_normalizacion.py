@@ -193,24 +193,3 @@ def downsampling_images(path, folder, sett):
 			
 	return 1
 
-
-#if __name__ == '__main__':
-	# folder with all images
-#	dir_image = 'C:/Users/virus/source/repos/DATASETS/CK+/'
-
-	# histogram equalization
-#	histogram_equ('C:/Users/virus/source/repos/DATASETS/Histogram/ZscoreOutput/')
-
-
-	# 
-#	histogram_images = 'C:/Users/virus/source/repos/DATASETS/Histogram/'
-	#mean_gral, std_gral = compute_mean_std_general(dir_image)
-	#print("\ngeneral mean = {}\ngeneral std = {}".format(mean_gral, std_gral))
-
-	#general mean = 126.28778215950788 histogram
-	#general std = 2.6452071285228773  histogram
-
-	#mean gral: 113.84889976249121  original
-	#std gral: 8.53443628163184     original
-
-	#zscore_normalization(histogram_images, mean_gral, std_gral)
