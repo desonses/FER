@@ -73,7 +73,7 @@ def worker(path, folder):
 	
 	start_time_downsampling = time.time()
 	print("\n({})Applying downsampling...".format(folder))
-	#final ="C:/Users/virus/Downloads/CK+/dataset-6emotions/test/test/" 
+	#final ="your_path/dataset-6emotions/test/test/" 
 	exit = dn.downsampling_images(zscore_path, folder, sett) # final or path=same folder
 	
 	print("--- %s seconds ---" % (time.time() - start_time_downsampling))
@@ -86,18 +86,18 @@ def worker(path, folder):
 
 if __name__ == "__main__":
 	
-	# six emotions (anger-LISTO, disgust-LISTO, fear-LISTO, happy-LISTO, sadness, surprise)
+	
 	# mean=102.84447893612776
 	# std=9.715599506559709
 
 	jobs = []
 	paths = [
-		('C:/Users/virus/Downloads/CK+/JAFFE_test/anger/','anger'),
-		('C:/Users/virus/Downloads/CK+/JAFFE_test/disgust/','disgust'),
-		('C:/Users/virus/Downloads/CK+/JAFFE_test/fear/','fear'),
-		('C:/Users/virus/Downloads/CK+/JAFFE_test/happy/','happy'),
-		('C:/Users/virus/Downloads/CK+/JAFFE_test/sadness/','sadness'),
-		('C:/Users/virus/Downloads/CK+/JAFFE_test/surprise/','surprise')
+		('your_path/JAFFE_test/anger/','anger'),
+		('your_path/disgust/','disgust'),
+		('your_path/JAFFE_test/fear/','fear'),
+		('your_path/JAFFE_test/happy/','happy'),
+		('your_path/JAFFE_test/sadness/','sadness'),
+		('your_path/JAFFE_test/surprise/','surprise')
 		]
 
 
@@ -111,25 +111,9 @@ if __name__ == "__main__":
 		print ('%s.exitcode = %s' % (j.name, j.exitcode))
 
 	# computing mean and std
-	#path = "C:/Users/virus/Downloads/CK+/JAFFE_test/"
+	#path = "/JAFFE_test/"
 	#delay(5)
 	#start_time_mean_std = time.time()
 	#print("\n({}) Computing the mean and standard deviation for all images...".format(folder))
 	#mean_gral, std_gral = dn.compute_mean_std_general(path)
 	#print("mean_gral={}, std_gral={}".format(mean_gral, std_gral))
-
-	#dir = "C:/Users/virus/Downloads/CK+/NEW_dataset-6emotions/train/surprise/"
-
-	
-	#path_cropped = rt.facial_and_box_landmarcks(dir)
-	
-
-
-
-
-
-	# pogramacio dinamica
-# https://innerpeace-wu.github.io/2017/03/04/DSaA-Dynamic-Programing/#part3
-# https://www.codechef.com/wiki/tutorial-dynamic-programming
-# --- 14841.312965154648 seconds --- clipping
-# --- 15206.103814125061 seconds --- rotations
