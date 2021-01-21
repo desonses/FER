@@ -331,32 +331,5 @@ def facial_and_box_landmarcks(path):
 	return new_path
 
 
-##########if __name__ == '__main__':
 
-	#image = 'C:/Users/virus/source/repos/DATASETS/PRUEBA/landmarck/Rotations/rotate2.png'
-	#compute_landmarcks(image)
-
-	# rotate images
-	##########path = 'C:/Users/virus/source/repos/DATASETS/PRUEBA/landmarck/'
-	
-	##########print("Rotating...\n")
-	#############new_images_rotated = compute_rotations(path)
-	##########	print("\n\n")
-	#################################################################
-	#################################################################
-
-	# compute the box area for crop image
-	#path = 'C:/Users/virus/source/repos/DATASETS/PRUEBA/landmarck/Rotations/'
-	#print("new directory = {}".format(new_images_rotated))
-	##########print("Cropping...\n")
-	#############facial_and_box_landmarcks(new_images_rotated)
-
-
-	############
-	# dawnsamplig
-	
-	##########dir = 'C:/Users/virus/source/repos/DATASETS/PRUEBA/landmarck/Rotations/CroppedImages/rotate4.png'
-	##########image = Image.open(dir)
-	##########proc_image = downsamplig_image(image)
-	##########proc_image.save('C:/Users/virus/source/repos/DATASETS/PRUEBA/landmarck/Rotations/CroppedImages/out4.png')
 	
