@@ -1,7 +1,8 @@
 "# FER" 
 The present project was proposed by Kuan Li et al. and the CK+ database and JAFFE.
 
-Include a step of preprocesing of images of train:
+
+Includes an image preprocessing steps of training::
 
 1. Compute the standard deviation and mean of all images (train and test)
 
