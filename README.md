@@ -6,7 +6,7 @@ Includes a pre-processing step to training images:
 
 1. Compute the standard deviation and mean of all images (train and test)
 
-2. Face alignment
+2. Face alignment (require a lib https://github.com/davisking/dlib for get facial landmarcks in the step of facealingment)
 
 3. Image cropping
 
