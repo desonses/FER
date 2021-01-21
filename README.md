@@ -2,7 +2,7 @@
 The present project was proposed by Kuan Li et al. and the CK+ database and JAFFE.
 
 
-Includes an image preprocessing steps of training::
+Includes a pre-processing step to training images:
 
 1. Compute the standard deviation and mean of all images (train and test)
 
