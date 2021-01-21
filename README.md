@@ -1,5 +1,5 @@
 "# FER" 
-The present project was proposed by Kuan Li et al. and the CK+ database and JAFFE.
+The present project was proposed by Kuan Li et al. 2019 and the CK+ database and JAFFE.
 
 
 Includes a pre-processing step to training images:
