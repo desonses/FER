@@ -11,7 +11,7 @@ Include a step of preprocesing of images of train:
 
 4. Data normalization (z-score and equalization histogram)
 
-5 Data augmentacion (online, random rotation (-2°,2°) and horizontal flipping)
+5. Data augmentacion (online, random rotation (-2°,2°) and horizontal flipping)
 
 
 
